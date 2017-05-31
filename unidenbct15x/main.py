@@ -19,6 +19,7 @@ class Unidenbct15x(object):
     ser = None
 
     def ___init___(self):
+        """ Init """
         pass
 
     def openserial(self, port, speed):
@@ -29,7 +30,8 @@ class Unidenbct15x(object):
         # return ser
 
     def closeserial(self):
-		self.ser.close()
+        """ Close Serial Conenction """
+        self.ser.close()
 
     def sendcommand(self, command, returnlength):
         """ Write to Serial Port and return output """
@@ -58,7 +60,7 @@ class Unidenbct15x(object):
 
         return status
 
-    def collectscreen(self):
+    def getscreen(self):
         """ Collect Data shown on scanner Screen """
         line = self.sendcommand('STS', 136)
         displayarray = line.split(',')
@@ -143,7 +145,7 @@ class Unidenbct15x(object):
 
         return screendata
 
-    def signalstrength(self):
+    def getsignalstrength(self):
         """ Collect Signal strength infomration """
         line = self.sendcommand('PWR', 17)
         powerarray = line.split(',')
@@ -181,7 +183,7 @@ class Unidenbct15x(object):
 
         return status, squelch
 
-    def getinfo(self):
+    def getradioinfo(self):
         """ Get Radio information """
 
         # MDL Get Model Info
@@ -194,7 +196,7 @@ class Unidenbct15x(object):
 
         return version, model
 
-    def buttonpush(self, key, mode, function=False):
+    def pushbutton(self, key, mode, function=False):
         """ Simulate a button push """
 
         validmodes = ['P', 'L', 'H', 'R']

@@ -22,6 +22,9 @@ DEBUG = False #True
 # def menu(line1, line2, line3, frequency='', alertstatus=False, \
 #     ccstatus=False, strength='', vol='', sql=''):
 def menu(screendata, strength='', vol='', sql=''):
+    """ Interpret and Display data from Scanner Screen
+        Requires dictionary from getscreen method
+    """
 
     line1 = screendata['line1']
     line2 = screendata['line2']
@@ -114,7 +117,7 @@ def menu(screendata, strength='', vol='', sql=''):
 
 
 def commandloop(scanner, button):
-
+    """ Test incomplete command interface """
     # set time out
     # funtion 2 sec
     # system 3 sec
@@ -124,14 +127,14 @@ def commandloop(scanner, button):
     elif button == '<' or '>':
         timeout = 3
 
-    screenoutput = scanner.collectscreen()
+    screenoutput = scanner.getscreen()
     print menu(screenoutput['line1'], screenoutput['line2'], screenoutput['line3'])
 
     print "You have ten seconds to answer!"
 
     i, o, e = select.select([sys.stdin], [], [], 10)
 
-    if (i):
+    if i:
         "You said", sys.stdin.readline().strip()
     else:
         print "You said nothing!"
@@ -139,26 +142,21 @@ def commandloop(scanner, button):
     time.sleep(timeout)
 
 def main():
-    ##############
-    # Main Routines
-    ##############
+    """ Main Routines """
     scanner = unidenbct15x.Unidenbct15x()
     scanner.openserial(PORT, SPEED)
 
     try:
         while True:
-            # line1, line2, line3, alertstatus, ccstatus, frequency = \
-            screenoutput = scanner.collectscreen()
-            strength = scanner.signalstrength()
+            screenoutput = scanner.getscreen()
+            strength = scanner.getsignalstrength()
             vol = scanner.volume()[1]
             sql = scanner.squelch()[1]
 
             os.system('clear')
 
             print menu(screenoutput, strength=strength, vol=vol, sql=sql)
-            # print menu(line1, line2, line3, frequency=frequency, \
-            #     alertstatus=alertstatus, ccstatus=ccstatus, \
-            #     strength=strength, vol=vol, sql=sql)
+
             time.sleep(1)
 
     except KeyboardInterrupt:
