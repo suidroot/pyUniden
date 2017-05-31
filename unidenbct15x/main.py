@@ -25,8 +25,7 @@ class Unidenbct15x(object):
     def openserial(self, port, speed):
         """ Open Serial Port """
         self.ser = serial.Serial(port, baudrate=speed, timeout=1, xonxoff=False, rtscts=False, dsrdtr=False)
-        print(self.ser.name)         # check which port was really used
-
+        #print(self.ser.name)         # check which port was really used
         # return ser
 
     def closeserial(self):
@@ -167,6 +166,13 @@ class Unidenbct15x(object):
             volume = self.sendcommand('VOL,' + str(setvol), 6)
             status = self.checkok(volume)
             volume = setvol
+
+        return status, volume
+
+    def mute(self):
+
+        volume = self.sendcommand('VOL,' + str(0), 6)
+        status = self.checkok(volume)
 
         return status, volume
 
