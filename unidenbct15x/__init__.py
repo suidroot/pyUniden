@@ -1,5 +1,5 @@
 #!/usr/bin/env python
 
-from scanner import *
+from main import *
 
-__all__ = ["scanner"]
+__all__ = ["main"]
