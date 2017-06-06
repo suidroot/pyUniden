@@ -144,6 +144,54 @@ class Unidenbct15x(object):
 
         return screendata
 
+    def getreception(self):
+        """ Collect Signal strength infomration """
+        line = self.sendcommand('GLG', 70)
+        gtgarray = line.split(',')
+
+        #GLG,48,NFM,0,0,PortlandCity,Portland Police,Police Disp,1,0,NONE,NONE,
+        #GLG,,,,,,,,,
+
+        glgdata = {
+            'tgid' : gtgarray[1],
+            'mod' : gtgarray[2],
+            'att' : int(gtgarray[3]),
+            'ctcss' : int(gtgarray[4]),
+            'name1' : gtgarray[5],
+            'name2' : gtgarray[6],
+            'name3' : gtgarray[7],
+            'sql' : int(gtgarray[8]),
+            'mut' : int(gtgarray[9]),
+            'systag' : int(gtgarray[10]),
+            'chantag' : int(gtgarray[11])
+        }
+
+        return glgdata
+
+    def menu(self, item):
+
+        menuoptions = [ 'SVC_MENU', 'WX_MENU', 'CCBAND_MENU', 'SCR_OPT_MENU',
+        'GL_LIST_MENU', 'SETTING_MENU']
+
+        if item in menuoptions:
+            commandreturn = self.sendcommand('MNU,' + str(item), 6)
+            status = self.checkok(commandreturn)
+        else:
+            status = False
+
+        return status
+
+    def collectsysteminfo(self):
+
+        # SIH
+        # SIH,[SYS_INDEX][\r]
+        # SIN
+        # SIN,[SYS_TYPE],[NAME],[QUICK_KEY],[HLD],[LOUT],[DLY],[RSV],[RSV],[RSV],[RSV], [RSV],[REV_INDEX],[FWD_INDEX],[CHN_GRP_HEAD],[CHN_GRP_TAIL], [SEQ_NO],[START_KEY],[RECORD],[RSV],[RSV],[RSV],[RSV],[NUMBER_TAG], [RSV],[ RSV],[ RSV],[PROTECT],[STATE][\r]
+        # SIT
+        # SIT,[SYS_INDEX][\r]
+
+        pass
+
     def getsignalstrength(self):
         """ Collect Signal strength infomration """
         line = self.sendcommand('PWR', 17)
