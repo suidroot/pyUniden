@@ -7,7 +7,7 @@
 # from sys import exit
 import serial
 
-DEBUG = False #True
+DEBUG = False
 
 __author__ = "Ben Mason"
 __copyright__ = "Copyright 2017"
@@ -19,7 +19,15 @@ def checkok(radiooutput, stricterror=False):
     """ Verify that OK was received back """
     command, radiooutput = radiooutput.split(',')
 
-    if radiooutput != 'OK':
+    if radiooutput == 'NG':
+        print "Command: " + command + " no applicable or not available in \
+               mode (NG)"
+    elif radiooutput == 'ERR':
+        print "Command: " + command + " returned and Error"
+        status = False
+        if stricterror:
+            exit("Command: " + command + " returned and Error")
+    elif radiooutput != 'OK':
         print "Command: " + command + " did not Return OK"
         status = False
         if stricterror:
@@ -54,8 +62,8 @@ class Unidenbct15x(object):
         """ Write to Serial Port and return output """
         self.ser.write(command + '\r')     # write a string
         self.ser.flush()
-        line = self.ser.read(returnlength)
-
+        # line = self.ser.read(returnlength)
+        line = self.ser.readline()
         line = line.rstrip()
 
         if DEBUG:

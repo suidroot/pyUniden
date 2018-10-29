@@ -13,7 +13,7 @@ __version__ = "0.1"
 __email__ = "locutus@the-collective.net"
 __status__ = "Development"
 
-PORT = '/dev/ttyUSB0'
+PORT = '/dev/ttyACM0'
 SPEED = 115200
 
 URLS = (

@@ -14,7 +14,7 @@ __status__ = "Development"
 
 SPEED = 115200
 #PORT = '/tmp/ttyV0'
-PORT = '/dev/ttyUSB0'
+PORT = '/dev/ttyACM0'
 
 scanner = unidenbct15x.Unidenbct15x()
 scanner.openserial(PORT, SPEED)
