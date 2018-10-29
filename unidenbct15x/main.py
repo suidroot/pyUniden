@@ -49,7 +49,7 @@ class Unidenbct15x(object):
         """ Init """
         pass
 
-    def openserial(self, port, speed):
+    def openserial(self, port, speed=115200):
         """ Open Serial Port """
         self.ser = serial.Serial(port, baudrate=speed, timeout=1, xonxoff=False,
                                  rtscts=False, dsrdtr=False)
