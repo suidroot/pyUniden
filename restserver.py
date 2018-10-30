@@ -18,12 +18,13 @@ SPEED = 115200
 
 URLS = (
     '/mute', 'mute',
-    '/volume/(.*)', 'volume'
+    '/volume/(.*)', 'volume',
+    '/pushbutton/(.*)', 'pushbuttons'
 )
 
 class mute:
     def GET(self):
-    	scanner = unidenbct15x.Unidenbct15x()
+        scanner = unidenbct15x.Unidenbct15x()
         scanner.openserial(PORT, SPEED)
         status, volume = scanner.mute()
         scanner.closeserial()
@@ -38,6 +39,30 @@ class volume:
         scanner.closeserial()
 
         return status, volume
+
+class pushbuttons:
+    def GET(self, data):
+
+
+        buttons = []
+        buttons = data.split("/")
+
+        if len(buttons) > 2:
+            return web.internalerror()
+
+        scanner = unidenbct15x.Unidenbct15x()
+        scanner.openserial(PORT, SPEED)
+
+        if 'F' in buttons:
+            buttons.remove('F')
+            scanner.pushbutton(buttons[0], "P", function=True)
+        else:
+            scanner.pushbutton(buttons[0], "P")
+
+        scanner.closeserial()
+
+        return 'OK'
+
 
 if __name__ == "__main__":
 
