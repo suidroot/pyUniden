@@ -29,6 +29,7 @@ def menu(screendata, strength='', vol='', sql=''):
     line1 = screendata['line1']
     line2 = screendata['line2']
     line3 = screendata['line3']
+    line4 = screendata['line4']
     if 'frequency' in screendata.keys():
         frequency = screendata['frequency']
     else:
@@ -49,17 +50,19 @@ def menu(screendata, strength='', vol='', sql=''):
     spacer1 = " " * (spacerwith - len(line1))
     spacer2 = " " * (spacerwith - len(line2))
     spacer3 = " " * (spacerwith - len(line3))
-    spacer4 = " " * (spacerwith - len(frequency))
+    spacer4 = " " * (spacerwith - len(line4))
+    spacer5 = " " * (spacerwith - len(frequency))
 
     display = """
   +--------------------------------+
-  | {0} {3}|
-  | {1} {4}|
-  | {2} {5}|
-  | {6} {7}|
+  | {0} {4}|
+  | {1} {5}|
+  | {2} {6}|
+  | {3} {7}|
+  | {8} {9}|
   +--------------------------------+
-  """.format(line1, line2, line3, spacer1, spacer2, spacer3, \
-      frequency, spacer4)
+  """.format(line1, line2, line3, line4, spacer1, spacer2, spacer3, spacer4, \
+      frequency, spacer5)
 
     if alertstatus:
         alertled = "*"

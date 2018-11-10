@@ -96,7 +96,7 @@ class Unidenbct15x(object):
             # '',                         L4_MODE        9
             # 'S0:----------   ',         L5_CHAR        10
             # '',                         L5_MODE        11
-            # '              WX',        L6_CHAR        12
+            # 'GRP---------    ',        L6_CHAR        12
             # '',                         L6_MODE        13
             # '1',                         SQL         14
             # '1',                         MUT         15
@@ -112,7 +112,7 @@ class Unidenbct15x(object):
                 'line1' : displayarray[4].strip(),
                 'line2' : displayarray[6].strip(),
                 'line3' : displayarray[10].strip(),
-                'mode' : displayarray[12].split(),
+                'line4' : displayarray[12].split(),
                 'frequency' : displayarray[8].strip(), # text float value
                 'squelchmode' : bool(displayarray[14]), # 0 or 1
                 'mutemode' : bool(displayarray[15]), # 0 or 1
