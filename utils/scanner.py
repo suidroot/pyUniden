@@ -7,7 +7,7 @@
 import time
 import os
 import sys
-import unidenbct15x
+import pyuniden
 
 __author__ = "Ben Mason"
 __copyright__ = "Copyright 2017"
@@ -146,7 +146,7 @@ def commandloop(scanner, button):
 
 def main():
     """ Main Routines """
-    scanner = unidenbct15x.Unidenbct15x()
+    scanner = pyuniden.Unidenrc()
     scanner.openserial(PORT, SPEED)
 
     try:
