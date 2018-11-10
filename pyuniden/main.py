@@ -10,7 +10,6 @@ import serial
 DEBUG = False
 
 __author__ = "Ben Mason"
-__copyright__ = "Copyright 2017"
 __version__ = "0.1"
 __email__ = "locutus@the-collective.net"
 __status__ = "Development"
@@ -37,7 +36,7 @@ def checkok(radiooutput, stricterror=False):
 
     return status
 
-class Unidenbct15x(object):
+class Unidenrc(object):
     """ Uniden BCT15X Object """
     ser = None
     numberofsystems = 0

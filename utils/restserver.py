@@ -5,7 +5,7 @@
 # Version: 0.1
 #
 import web
-import unidenbct15x
+import pyuniden
 
 __author__ = "Ben Mason"
 __copyright__ = "Copyright 2017"
@@ -24,7 +24,7 @@ URLS = (
 
 class mute:
     def GET(self):
-        scanner = unidenbct15x.Unidenbct15x()
+        scanner = pyuniden.Unidenrc()
         scanner.openserial(PORT, SPEED)
         status, volume = scanner.mute()
         scanner.closeserial()
@@ -33,7 +33,7 @@ class mute:
 
 class volume:
     def GET(self, setvol=''):
-        scanner = unidenbct15x.Unidenbct15x()
+        scanner = pyuniden.Unidenrc()
         scanner.openserial(PORT, SPEED)
         status, volume = scanner.volume(setvol)
         scanner.closeserial()
@@ -50,7 +50,7 @@ class pushbuttons:
         if len(buttons) > 2:
             return web.internalerror()
 
-        scanner = unidenbct15x.Unidenbct15x()
+        scanner = pyuniden.Unidenrc()
         scanner.openserial(PORT, SPEED)
 
         if 'F' in buttons:
