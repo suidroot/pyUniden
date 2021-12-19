@@ -1,5 +1,5 @@
 #!/usr/bin/env python
 
-from main import *
+from .pyuniden import *
 
-__all__ = ["main"]
+__all__ = ["pyuniden"]

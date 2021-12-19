@@ -1,13 +1,15 @@
 #!/usr/bin/which python3
+# -*- coding: future_fstrings -*-
+
 """
  Library for controlling a Uniden BCT15X scanner
  Author: Ben Mason
- Version: 0.1
+ Version: 0.2
 """
 # from sys import exit
 import serial
 
-DEBUG = False
+DEBUG = True
 
 __author__ = "Ben Mason"
 __version__ = "0.1"
@@ -16,21 +18,23 @@ __status__ = "Development"
 
 def checkok(radiooutput, stricterror=False):
     """ Verify that OK was received back """
-    command, radiooutput = radiooutput.split(',')
+    command, command_status = radiooutput.split(',')
+    if DEBUG:
+        print (f"checkok: radiooutput {radiooutput}")
+        print (f"checkok: Command: {command}, radiooutput {command_status}")
 
-    if radiooutput == 'NG':
-        print "Command: " + command + " no applicable or not available in \
-               mode (NG)"
-    elif radiooutput == 'ERR':
-        print "Command: " + command + " returned and Error"
+    if command_status == 'NG':
+        print (f"Command: {command} no applicable or not available in mode (NG)")
+    elif command_status == 'ERR':
+        print (f"Command: {command} returned and Error")
         status = False
         if stricterror:
-            exit("Command: " + command + " returned and Error")
-    elif radiooutput != 'OK':
-        print "Command: " + command + " did not Return OK"
+            exit(f"Command: {command} returned and Error")
+    elif command_status != 'OK':
+        print (f"Command: {command} did not Return OK")
         status = False
         if stricterror:
-            exit("Command: " + command + " did not Return OK")
+            exit(f"Command: {command} did not Return OK")
     else:
         status = True
 
@@ -59,17 +63,18 @@ class Unidenrc(object):
 
     def sendcommand(self, command, returnlength):
         """ Write to Serial Port and return output """
-        self.ser.write(command + '\r')     # write a string
+        self.ser.write(str(command + '\r').encode('ascii'))     # write a string
         self.ser.flush()
         # line = self.ser.read(returnlength)
         line = self.ser.readline()
+        line = line.decode(errors='ignore') # ignore non-utf-8 characters
         line = line.rstrip()
 
         if DEBUG:
-            print line
+            print (f"sendcommand: {line}")
 
         if 'ERR' in line:
-            print "INVALID COMMAND!!!!"
+            print ("INVALID COMMAND!!!!")
 
         return line
 
@@ -79,7 +84,7 @@ class Unidenrc(object):
         displayarray = line.split(',')
 
         if DEBUG:
-            print displayarray
+            print (displayarray)
 
         if displayarray[1] == '011000':
             # Home Screen
@@ -202,7 +207,7 @@ class Unidenrc(object):
         powerpercent = (int(powerarray[1])/1023)*100
 
         if DEBUG:
-            print powerarray
+            print (powerarray)
 
         # Return singal power, and 3 screen lines
         return powerpercent
@@ -269,12 +274,12 @@ class Unidenrc(object):
             checkok(radioout)
 
         if key not in validkeys:
-            print 'KEY ERROR'
+            print ('KEY ERROR')
 
         if mode not in validmodes:
-            print 'MODE ERROR'
+            print ('MODE ERROR')
 
-        radioin = 'KEY,' + key + ',' + mode
+        radioin = f"KEY, {key}, {mode}"
 
         radioout = self.sendcommand(radioin, 10)
         status = checkok(radioout)
@@ -307,37 +312,37 @@ class Unidenrc(object):
 
         # Get first System
         output = self.sendcommand('SIH', 10)
-        print output
+        print (output)
 
         # SIH,1105
         nextsin = output.split(',')[1]
-        print nextsin
+        print (nextsin)
 
         # Gather system list, iterate through FWD_INDEX
         # until last system
         while nextsin != -1:
-            print "SIN: " + str(nextsin)
+            print (f"SIN: {nextsin}")
             systeminfo = self.getsysteminfo(nextsin)
             self.systems[int(nextsin)] = systeminfo
 
             nextsin = systeminfo['FWD_INDEX']
 
-        print "----------------------------------"
+        print ("----------------------------------")
         for system in self.systems:
-            print "SIN: " + str(system)
-            print "Group Head: " + str(self.systems[system]['CHN_GRP_HEAD'])
+            print (f"SIN: {system}")
+            print (f"Group Head: {self.systems[system]['CHN_GRP_HEAD']}")
 
             # Collect Groups for the system
             nextgrp = self.systems[system]['CHN_GRP_HEAD']
             while nextgrp != -1:
-                print "GIN: " + str(nextgrp)
+                print ("GIN: {nextgrp}")
                 groupout = self.getgroupinformation(nextgrp)
                 self.groups[nextgrp] = groupout
                 nextchn = self.groups[nextgrp]['CHN_HEAD']
 
                 # Collect Channels for the Group
                 while nextchn != -1:
-                    print "CIN: " + str(nextchn)
+                    print ("CIN: {nextchn}")
                     channelout = self.getchannelinfo(nextchn)
                     self.channels[nextchn] = channelout
                     nextchn = channelout['FWD_INDEX']
@@ -361,7 +366,7 @@ class Unidenrc(object):
         currentsin = output.split(',')
 
         if DEBUG:
-            print currentsin
+            print (currentsin)
 
         newsin = {
             'SYS_TYPE': currentsin[1],
@@ -403,7 +408,7 @@ class Unidenrc(object):
         currentgin = output.split(',')
 
         if DEBUG:
-            print currentgin
+            print (currentgin)
 
         if currentgin[1] != "ERR\r":
 
@@ -431,7 +436,7 @@ class Unidenrc(object):
             return ginout
 
         else:
-            print "No Group Found"
+            print ("No Group Found")
             return None
 
     def getchannelinfo(self, cin):
@@ -446,7 +451,7 @@ class Unidenrc(object):
         currentcin = output.split(',')
 
         if DEBUG:
-            print currentcin
+            print (currentcin)
 
         cinout = {
             'NAME' : currentcin[1],
